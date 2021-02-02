@@ -18,30 +18,30 @@ function FavoriteArticles() {
   }));
 
   const classes = useStyles();
+  let currentArticles;
+  let pageNumbers = [];
+  if (getFavoriteArticles() && getFavoriteArticles().length) {
+    const indexOfLastFavorite = page * articlePerPage;
+    const indexOfFirstFavorite = indexOfLastFavorite - articlePerPage;
+    currentArticles = getFavoriteArticles().slice(
+      indexOfFirstFavorite,
+      indexOfLastFavorite
+    );
 
-  // Get current posts
-  const indexOfLastFavorite = page * articlePerPage;
-  const indexOfFirstFavorite = indexOfLastFavorite - articlePerPage;
-  const currentPosts = getFavoriteArticles().slice(
-    indexOfFirstFavorite,
-    indexOfLastFavorite
-  );
-
-  const pageNumbers = [];
-
-  for (
-    let i = 1;
-    i <= Math.ceil(getFavoriteArticles().length / articlePerPage);
-    i++
-  ) {
-    pageNumbers.push(i);
+    for (
+      let i = 1;
+      i <= Math.ceil(getFavoriteArticles().length / articlePerPage);
+      i++
+    ) {
+      pageNumbers.push(i);
+    }
   }
 
   return (
     <div className={classes.root}>
       {getFavoriteArticles() &&
         getFavoriteArticles().length > 0 &&
-        currentPosts.map((article, index) => (
+        currentArticles.map((article, index) => (
           <CardArticle article={article} key={article.id + index} />
         ))}
       {getFavoriteArticles() && getFavoriteArticles().length > 0 && (

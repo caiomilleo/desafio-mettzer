@@ -18,6 +18,9 @@ export default function NavBar() {
     <div className={classes.root}>
       <AppBar position='static'>
         <Toolbar>
+        <Button color='inherit' onClick={() => history.push('/')}>
+            Artigos
+          </Button>
           <Button color='inherit' onClick={() => history.push('/favoritos')}>
             Favoritos
           </Button>
