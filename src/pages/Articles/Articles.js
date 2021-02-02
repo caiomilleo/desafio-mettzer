@@ -20,6 +20,7 @@ function Articles() {
 
   useEffect(() => {
     search(page);
+    // eslint-disable-next-line
   }, [page]);
 
   const search = async (page) => {
