@@ -42,8 +42,16 @@ function FavoriteArticles() {
       {getFavoriteArticles() &&
         getFavoriteArticles().length > 0 &&
         currentArticles.map((article, index) => (
-          <Grid container item direction='row' justify='center' xs={12} sm={3}>
-            <CardArticle article={article} key={article.id + index} />
+          <Grid
+            container
+            item
+            direction='row'
+            justify='center'
+            xs={12}
+            sm={3}
+            key={`${article.id}${index}`}
+          >
+            <CardArticle article={article} />
           </Grid>
         ))}
       {getFavoriteArticles() && getFavoriteArticles().length > 0 && (

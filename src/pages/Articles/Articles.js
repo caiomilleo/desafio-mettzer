@@ -3,9 +3,10 @@ import Pagination from '@material-ui/lab/Pagination';
 import { makeStyles } from '@material-ui/core/styles';
 import { CardArticle } from '../../components/CardArticle/CardArticle';
 import { getArticles } from '../../services/api';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, TextField, Typography } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from 'react-router-dom';
+import useDebounce from '../../hooks/useDebounce';
 
 function Articles() {
   const [articles, setArticles] = useState([]);
@@ -13,26 +14,41 @@ function Articles() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  const useStyles = makeStyles(() => ({
+  const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',
       justifyContent: 'center',
       flexFlow: 'row wrap',
     },
+    textField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(3),
+      width: '25ch',
+    },
+    loading: {
+      marginTop: theme.spacing(5),
+    },
   }));
 
   const classes = useStyles();
 
+  const [searchValue, setSearchValue] = useState('');
+  const debouncedSearch = useDebounce(searchValue, 1000);
+
   useEffect(() => {
-    search(page);
+    if (debouncedSearch) {
+      search(page);
+    }
     // eslint-disable-next-line
-  }, [page]);
+  }, [debouncedSearch, page]);
 
   const search = async (page) => {
     try {
       setLoading(true);
       setError(false);
-      const { data } = await getArticles(page);
+      const { data } = await getArticles(debouncedSearch, page);
       if (data && data.length > 0) {
         setLoading(false);
         let articlesMap = data.map((item) =>
@@ -75,14 +91,32 @@ function Articles() {
 
   return (
     <div className={classes.root}>
-      {loading && <CircularProgress />}
+      <Grid container item direction='row' justify='center'>
+        <TextField
+          label='Buscar artigos...'
+          defaultValue={searchValue}
+          className={classes.textField}
+          onChange={(e) => setSearchValue(e.target.value)}
+          variant='outlined'
+        />
+      </Grid>
+      {loading && <CircularProgress className={classes.loading} />}
       {error && errorApi()}
+
       {articles &&
         articles.length > 0 &&
         !loading &&
         articles.map((article, index) => (
-          <Grid container item direction='row' justify='center' xs={12} sm={3}>
-            <CardArticle article={article} key={article.id + index} />
+          <Grid
+            container
+            item
+            direction='row'
+            justify='center'
+            xs={12}
+            sm={3}
+            key={`${article.id}${index}`}
+          >
+            <CardArticle article={article} />
           </Grid>
         ))}
       {articles && articles.length > 0 && !loading && (

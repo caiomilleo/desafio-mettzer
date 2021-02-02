@@ -5,8 +5,8 @@ const API_KEY = 'Y7wOU2hnE95zTbCM3oDcy8fQHWANupFs';
 
 export const PAGE_SIZE = 12;
 
-export const getArticles = async (page) => {
-  const { data } = await axios.get(`${API_URL}/search/article`, {
+export const getArticles = async (query, page) => {
+  const { data } = await axios.get(`${API_URL}/search/${query}`, {
     params: {
       page: page,
       pageSize: PAGE_SIZE,
