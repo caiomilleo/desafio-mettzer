@@ -81,7 +81,9 @@ function Articles() {
         articles.length > 0 &&
         !loading &&
         articles.map((article, index) => (
-          <CardArticle article={article} key={article.id + index} />
+          <Grid container item direction='row' justify='center' xs={12} sm={3}>
+            <CardArticle article={article} key={article.id + index} />
+          </Grid>
         ))}
       {articles && articles.length > 0 && !loading && (
         <Grid container direction='row' justify='center' alignItems='center'>
