@@ -34,6 +34,7 @@ function Articles() {
 
   const transformToArticleData = (data) => {
     return {
+      id: data.id,
       authors: data.authors,
       type: 'Artigo',
       title: data.title,
@@ -46,7 +47,9 @@ function Articles() {
     <div className={classes.root}>
       {articles &&
         articles.length > 0 &&
-        articles.map((article) => <CardArticle {...article} />)}
+        articles.map((article, index) => (
+          <CardArticle {...article} key={article.id + index} />
+        ))}
     </div>
   );
 }
