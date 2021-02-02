@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
+import Pagination from '@material-ui/lab/Pagination';
 import { makeStyles } from '@material-ui/core/styles';
 import { CardArticle } from '../../components/CardArticle/CardArticle';
 import { getArticles } from '../../services/api';
 
 function Articles() {
   const [articles, setArticles] = useState([]);
+  const [page, setPage] = useState(1);
 
-  const useStyles = makeStyles(() => ({
+  const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',
       justifyContent: 'center',
@@ -17,12 +19,12 @@ function Articles() {
   const classes = useStyles();
 
   useEffect(() => {
-    search();
+    search(page);
   }, []);
 
-  const search = async () => {
+  const search = async (page) => {
     try {
-      const { data } = await getArticles(1);
+      const { data } = await getArticles(page);
       if (data && data.length > 0) {
         let articlesMap = data.map((item) =>
           transformToArticleData(item._source)
@@ -43,6 +45,11 @@ function Articles() {
     };
   };
 
+  const handlePagination = (page) => {
+    setPage(page);
+    search(page);
+  };
+
   return (
     <div className={classes.root}>
       {articles &&
@@ -50,6 +57,13 @@ function Articles() {
         articles.map((article, index) => (
           <CardArticle {...article} key={article.id + index} />
         ))}
+      <div>
+        <Pagination
+          count={10}
+          page={page}
+          onChange={(event, val) => handlePagination(val)}
+        />
+      </div>
     </div>
   );
 }
