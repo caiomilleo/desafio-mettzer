@@ -8,7 +8,7 @@ function Articles() {
   const [articles, setArticles] = useState([]);
   const [page, setPage] = useState(1);
 
-  const useStyles = makeStyles((theme) => ({
+  const useStyles = makeStyles(() => ({
     root: {
       display: 'flex',
       justifyContent: 'center',
@@ -20,7 +20,7 @@ function Articles() {
 
   useEffect(() => {
     search(page);
-  }, []);
+  }, [page]);
 
   const search = async (page) => {
     try {
