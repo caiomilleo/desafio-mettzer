@@ -55,15 +55,17 @@ function Articles() {
       {articles &&
         articles.length > 0 &&
         articles.map((article, index) => (
-          <CardArticle {...article} key={article.id + index} />
+          <CardArticle article={article} key={article.id + index} />
         ))}
-      <div>
-        <Pagination
-          count={10}
-          page={page}
-          onChange={(event, val) => handlePagination(val)}
-        />
-      </div>
+      {articles && articles.length > 0 && (
+        <div>
+          <Pagination
+            count={10}
+            page={page}
+            onChange={(event, val) => handlePagination(val)}
+          />
+        </div>
+      )}
     </div>
   );
 }

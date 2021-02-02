@@ -10,6 +10,11 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Collapse } from '@material-ui/core';
+import {
+  getFavoriteArticles,
+  setFavoriteArticle,
+  removeArticle,
+} from '../../store/localStorage';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,19 +39,46 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function CardArticle({ authors, type, title, description, urls }) {
+export function CardArticle({ article }) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
+  const { authors, type, title, description, urls } = article;
+  const [favoriteArticles, setFavoriteArticles] = useState(
+    getFavoriteArticles() ? getFavoriteArticles() : []
+  );
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
+  const handleFavoriteArticle = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isFavorite()) {
+      setFavoriteArticle(article);
+      setFavoriteArticles((prev) => [...prev, article]);
+    } else {
+      removeArticle(article);
+      setFavoriteArticles((prev) =>
+        prev.filter((item) => item.id !== article.id)
+      );
+    }
+  };
+
+  const isFavorite = () => {
+    if (favoriteArticles && favoriteArticles.length > 0) {
+      return favoriteArticles.some((item) => item.id === article.id);
+    }
+  };
+
   return (
     <Card className={classes.root}>
       <CardActions>
-        <IconButton aria-label='add to favorites'>
-          <FavoriteIcon />
+        <IconButton
+          aria-label='add to favorites'
+          onClick={(e) => handleFavoriteArticle(e)}
+        >
+          <FavoriteIcon style={{ fill: isFavorite() && 'red' }} />
         </IconButton>
       </CardActions>
 
